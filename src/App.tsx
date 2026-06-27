@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import {
   Search,
   Filter,
@@ -5646,8 +5646,29 @@ export default function WorkshopExplorer() {
   const [showDataPaste, setShowDataPaste] = useState(false)
   const [rawData, setRawData] = useState('')
 
-  const [savedIds, setSavedIds] = useState<number[]>([])
-  const [view, setView] = useState('explore')
+  const [savedIds, setSavedIds] = useState<number[]>(() => {
+    try {
+      const stored = localStorage.getItem('yce_savedIds')
+      return stored ? JSON.parse(stored) : []
+    } catch {
+      return []
+    }
+  })
+  const [view, setView] = useState(() => {
+    try {
+      return localStorage.getItem('yce_view') || 'explore'
+    } catch {
+      return 'explore'
+    }
+  })
+
+  useEffect(() => {
+    localStorage.setItem('yce_savedIds', JSON.stringify(savedIds))
+  }, [savedIds])
+
+  useEffect(() => {
+    localStorage.setItem('yce_view', view)
+  }, [view])
 
   const ageOptions = ['All', '7-11', '12-14', '15-18', '19-35']
   const timeOptions = ['All', 'Morning', 'Afternoon', 'Evening']
