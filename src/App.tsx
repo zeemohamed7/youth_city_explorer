@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import {
   Search,
   Filter,
@@ -5558,7 +5558,7 @@ const MOCK_SCRAPED_DATA = [
   }
 ]
 
-const parseDays = (daysStr, datesStr) => {
+const parseDays = (daysStr: string, datesStr: string) => {
   if (!daysStr) return []
   const str = daysStr.toLowerCase()
   if (
@@ -5581,7 +5581,7 @@ const parseDays = (daysStr, datesStr) => {
     const dateMatch = datesStr.match(/(\d+)\s+([a-zA-Z]+)/)
     if (dateMatch) {
       const d = new Date(`${dateMatch[2]} ${dateMatch[1]}, 2026`)
-      if (!isNaN(d)) {
+      if (!isNaN(d.getTime())) {
         const dayNames = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
         days.push(dayNames[d.getDay()])
       }
@@ -5590,11 +5590,11 @@ const parseDays = (daysStr, datesStr) => {
   return days
 }
 
-const parseTime = (timeStr, category) => {
+const parseTime = (timeStr: string, category: string) => {
   const parts = timeStr.toLowerCase().split('to')
   if (parts.length < 2) return { start: 0, end: 0 }
 
-  const extractTime = (str) => {
+  const extractTime = (str: string) => {
     const match = str.match(/(\d+):(\d+)/)
     if (!match) return null
     let h = parseInt(match[1])
@@ -5646,7 +5646,7 @@ export default function WorkshopExplorer() {
   const [showDataPaste, setShowDataPaste] = useState(false)
   const [rawData, setRawData] = useState('')
 
-  const [savedIds, setSavedIds] = useState([])
+  const [savedIds, setSavedIds] = useState<number[]>([])
   const [view, setView] = useState('explore')
 
   const ageOptions = ['All', '7-11', '12-14', '15-18', '19-35']
@@ -5711,7 +5711,7 @@ export default function WorkshopExplorer() {
     }
   }
 
-  const toggleSave = (id) => {
+  const toggleSave = (id: number) => {
     setSavedIds((prev) =>
       prev.includes(id)
         ? prev.filter((savedId) => savedId !== id)
@@ -5748,7 +5748,7 @@ export default function WorkshopExplorer() {
   }, [savedWorkshops])
 
   const calendarData = useMemo(() => {
-    const days = [
+    const days: Array<{ key: string; label: string; events: any[] }> = [
       { key: 'sun', label: 'Sun', events: [] },
       { key: 'mon', label: 'Mon', events: [] },
       { key: 'tue', label: 'Tue', events: [] },
@@ -5965,7 +5965,7 @@ export default function WorkshopExplorer() {
                       key={ws.id}
                       className="bg-white p-5 rounded-2xl shadow-sm border border-[#e2ece5] hover:shadow-md hover:border-[#b4d2c1] transition-all flex flex-col h-full relative overflow-hidden"
                     >
-                      {ws._relevanceScore > 0 && (
+                      {(ws as any)._relevanceScore > 0 && (
                         <div className="absolute top-0 right-0 bg-amber-100 text-amber-800 text-[10px] font-bold px-3 py-1 rounded-bl-lg border-b border-l border-amber-200">
                           ⭐ SUGGESTED MATCH
                         </div>
